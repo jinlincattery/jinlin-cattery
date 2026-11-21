@@ -1,0 +1,223 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+// 读取数据
+const kittens = (await getCollection('kittens')).sort((a, b) => a.data.order - b.data.order);
+const breeds = (await getCollection('breeds')).sort((a, b) => a.data.order - b.data.order);
+const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
+const settingsEntry = await getEntry('site', 'settings');
+const settings = settingsEntry.data;
+
+const whatsapp = settings.whatsapp || '971501234567';
+
+// 状态徽章映射
+const statusMap = {
+  available: { cls: 'badge-available', zh: '在售', en: 'Available' },
+  reserved: { cls: 'badge-reserved', zh: '已预订', en: 'Reserved' },
+  waitlist: { cls: 'badge-accent', zh: '排队中', en: 'Waitlist' },
+};
+---
+
+<Layout title={`${settings.hero_title_en} | ${settings.brand} Cattery UAE`} description={settings.hero_sub_en}>
+  <section class="hero">
+    <div class="hero-media">
+      <img src="/images/hero-cat.jpg" alt="Cream British Shorthair kitten with blue eyes" width="1920" height="2560">
+    </div>
+    <div class="hero-copy">
+      <h1 data-en={settings.hero_title_en} data-zh={settings.hero_title_zh}>{settings.hero_title_en}</h1>
+      <p class="lead" data-en={settings.hero_sub_en} data-zh={settings.hero_sub_zh}>{settings.hero_sub_en}</p>
+      <div class="hero-actions">
+        <a href="#available" class="btn btn-primary" data-en="View available cats" data-zh="查看在售猫咪">View available cats</a>
+        <a href={`https://wa.me/${whatsapp}?text=Hello%2C%20I%27d%20like%20to%20enquire%20about%20your%20kittens`} class="btn btn-outline" target="_blank" rel="noopener" data-en="WhatsApp us" data-zh="WhatsApp 咨询">WhatsApp us</a>
+      </div>
+      <div class="trust-strip">
+        <div class="trust-item">
+          <div class="label" data-en="Healthy & well-socialised" data-zh="健康 & 社会化良好">Healthy & well-socialised</div>
+          <div class="desc" data-en="Raised at home, never caged" data-zh="居家养育，从不笼养">Raised at home, never caged</div>
+        </div>
+        <div class="trust-item">
+          <div class="label" data-en="Vet-checked & vaccinated" data-zh="健康检查 & 疫苗齐全">Vet-checked & vaccinated</div>
+          <div class="desc" data-en="Health records included" data-zh="含健康档案">Health records included</div>
+        </div>
+        <div class="trust-item">
+          <div class="label" data-en="Door-to-door delivery" data-zh="门到门配送">Door-to-door delivery</div>
+          <div class="desc" data-en="Across Dubai & the UAE" data-zh="迪拜及阿联酋全境">Across Dubai & the UAE</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="breeds">
+    <div class="container">
+      <div class="eyebrow" data-en="Our breeds" data-zh="我们的品种">Our breeds</div>
+      <h2 class="section-title" data-en="A curated selection of breeds" data-zh="精选品种">A curated selection of breeds</h2>
+      <p class="section-sub" data-en="Each breed is chosen for temperament, health and beauty — raised in a calm home environment." data-zh="每个品种都经过性情、健康与颜值筛选，居家环境精心养育。">Each breed is chosen for temperament, health and beauty — raised in a calm home environment.</p>
+      <div class="breed-grid">
+        {breeds.map((b) => (
+          <a href={`/breeds/${b.slug}`} class="breed-card">
+            <div class="media"><img src={b.data.photo} alt={b.data.name_en} loading="lazy" width="1920" height="2560"></div>
+            <div class="body">
+              <h3 data-en={b.data.name_en} data-zh={b.data.name_zh}>{b.data.name_en}</h3>
+              <p class="desc" data-en={b.data.tagline_en} data-zh={b.data.tagline_zh}>{b.data.tagline_en}</p>
+              <span class="link" data-en="View breed →" data-zh="查看品种 →">View breed →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="available">
+    <div class="container">
+      <div class="eyebrow" data-en="Available now" data-zh="在售猫咪">Available now</div>
+      <h2 class="section-title" data-en="Kittens currently in our care" data-zh="当前在售猫咪">Kittens currently in our care</h2>
+      <p class="section-sub" data-en="Each kitten is raised underfoot, well-socialised and prepared for a smooth transition. Prices shared privately on enquiry — every kitten is placed by reservation." data-zh="每只猫咪都居家养育、充分社会化，为平稳交接做好准备。价格私信咨询，所有猫咪均以预订方式成交。">Each kitten is raised underfoot, well-socialised and prepared for a smooth transition. Prices shared privately on enquiry — every kitten is placed by reservation.</p>
+      <div class="kitten-grid">
+        {kittens.map((k) => {
+          const st = statusMap[k.data.status] || statusMap.available;
+          return (
+            <a href={`/kittens/${k.slug}`} class="kitten-card">
+              <div class="media">
+                <span class={`badge ${st.cls}`} data-en={st.en} data-zh={st.zh}>{st.en}</span>
+                <img src={k.data.photo} alt={`${k.data.name} — ${k.data.breed_en} kitten`} loading="lazy" width="1920" height="2560">
+              </div>
+              <div class="body">
+                <div class="name">{k.data.name}</div>
+                <div class="breed" data-en={`${k.data.breed_en} · ${k.data.colour_en}`} data-zh={`${k.data.breed} · ${k.data.colour}`}>{k.data.breed_en} · {k.data.colour_en}</div>
+                <div class="meta">
+                  <span><b data-en="Gender" data-zh="性别">Gender</b> <span>{k.data.gender}</span></span>
+                  <span><b data-en="Age" data-zh="年龄">Age</b> <span>{k.data.age} {k.data.age === 1 ? 'week' : 'weeks'}</span></span>
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="about">
+    <div class="container">
+      <div class="eyebrow" data-en="Why families trust us" data-zh="家庭为何信赖我们">Why families trust us</div>
+      <h2 class="section-title" data-en="A responsible approach to raising kittens" data-zh="对养育猫咪负责的态度">A responsible approach to raising kittens</h2>
+      <p class="section-sub" data-en="Every kitten leaves our home with complete documentation and our ongoing support." data-zh="每只猫咪离开时都附带完整文件与我们的长期支持。">Every kitten leaves our home with complete documentation and our ongoing support.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="icon">✓</div>
+          <h3 data-en="Vet-checked & vaccinated" data-zh="健康检查 & 疫苗">Vet-checked & vaccinated</h3>
+          <p data-en="Full veterinary assessment, age-appropriate vaccinations and microchip before rehoming." data-zh="离舍前进行完整兽医评估、适龄疫苗与芯片植入。">Full veterinary assessment, age-appropriate vaccinations and microchip before rehoming.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">§</div>
+          <h3 data-en="Full health records" data-zh="完整健康档案">Full health records</h3>
+          <p data-en="Complete vaccination, microchip and veterinary documentation provided for every kitten." data-zh="每只猫咪都提供完整的疫苗、芯片与兽医检查文件。">Complete vaccination, microchip and veterinary documentation provided for every kitten.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">♡</div>
+          <h3 data-en="Raised at home" data-zh="居家养育">Raised at home</h3>
+          <p data-en="Never in cages — our kittens grow up in a family home with daily handling." data-zh="从不笼养——猫咪在家庭环境中成长，每日亲密互动。">Never in cages — our kittens grow up in a family home with daily handling.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">✈</div>
+          <h3 data-en="Door-to-door delivery" data-zh="门到门配送">Door-to-door delivery</h3>
+          <p data-en="Full import and delivery handled for you, from our cattery to your home in the UAE." data-zh="全程代办进口与配送，从猫舍直达您在阿联酋的家。">Full import and delivery handled for you, from our cattery to your home in the UAE.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">∞</div>
+          <h3 data-en="Lifetime support" data-zh="终身支持">Lifetime support</h3>
+          <p data-en="Guidance on nutrition, settling in and care — whenever you need us." data-zh="提供营养、适应与照护指导——随时为您服务。">Guidance on nutrition, settling in and care — whenever you need us.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">✪</div>
+          <h3 data-en="Carefully selected" data-zh="精心筛选">Carefully selected</h3>
+          <p data-en="Every kitten is chosen for type, coat quality and a stable, affectionate temperament." data-zh="每只猫咪都按品相、毛质与温顺性情精心筛选。">Every kitten is chosen for type, coat quality and a stable, affectionate temperament.</p>
+        </div>
+        <div class="feature-card pedigree-only">
+          <div class="icon">§</div>
+          <h3 data-en="Registered pedigree" data-zh="注册血统">Registered pedigree</h3>
+          <p data-en="Registered with a recognised feline association, with pedigree documentation provided for every kitten." data-zh="已在权威猫咪协会注册，每只猫咪均提供血统文件。">Registered with a recognised feline association, with pedigree documentation provided for every kitten.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="process">
+    <div class="container">
+      <div class="eyebrow" data-en="How it works" data-zh="购买流程">How it works</div>
+      <h2 class="section-title" data-en="From enquiry to your home, handled with care" data-zh="从咨询到到家，全程贴心代办">From enquiry to your home, handled with care</h2>
+      <p class="section-sub" data-en="We manage the entire journey — including international delivery — so you can simply welcome your companion home." data-zh="我们全程代办，包括国际配送，您只需迎接新伙伴回家。">We manage the entire journey — including international delivery — so you can simply welcome your companion home.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="num">01</div>
+          <h3 data-en="Enquiry" data-zh="咨询">Enquiry</h3>
+          <p data-en="Message us on WhatsApp to share the breed, colour and timing you have in mind." data-zh="通过 WhatsApp 告诉我们您想要的品种、颜色与时间。">Message us on WhatsApp to share the breed, colour and timing you have in mind.</p>
+        </div>
+        <div class="step">
+          <div class="num">02</div>
+          <h3 data-en="Introduction" data-zh="看猫">Introduction</h3>
+          <p data-en="We arrange a virtual viewing of your kitten and their parents, with health records." data-zh="我们安排线上看猫，展示小猫及其父母与健康档案。">We arrange a virtual viewing of your kitten and their parents, with health records.</p>
+        </div>
+        <div class="step">
+          <div class="num">03</div>
+          <h3 data-en="Reservation" data-zh="预订">Reservation</h3>
+          <p data-en="A reservation secures your kitten while health checks and travel paperwork are completed." data-zh="预订锁定您的小猫，同时完成健康检查与运输文件。">A reservation secures your kitten while health checks and travel paperwork are completed.</p>
+        </div>
+        <div class="step">
+          <div class="num">04</div>
+          <h3 data-en="Welcome home" data-zh="到家">Welcome home</h3>
+          <p data-en="Fully vaccinated and vet-checked, your kitten arrives with a complete records pack." data-zh="疫苗齐全、健康无忧，小猫带着完整档案到家。">Fully vaccinated and vet-checked, your kitten arrives with a complete records pack.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="testimonials">
+    <div class="container">
+      <div class="eyebrow" data-en="Kind words" data-zh="客户评价">Kind words</div>
+      <h2 class="section-title" data-en="From our families" data-zh="来自我们的客户家庭">From our families</h2>
+      <div class="testimonial-grid">
+        <div class="testimonial">
+          <p class="quote" data-en="From the very first message, the care and professionalism were evident. Our British Shorthair arrived healthy, calm and clearly well-loved." data-zh="从第一条消息起，就能感受到专业与用心。我们的英短健康、温顺，明显被照顾得很好。">From the very first message, the care and professionalism were evident. Our British Shorthair arrived healthy, calm and clearly well-loved.</p>
+          <div class="author">Layla A.</div>
+          <div class="loc" data-en="Dubai" data-zh="迪拜">Dubai</div>
+        </div>
+        <div class="testimonial">
+          <p class="quote" data-en="We were guided gently through every step. The transparency around health testing gave us complete peace of mind." data-zh="每一步都有耐心引导。健康检测的透明让我们完全放心。">We were guided gently through every step. The transparency around health testing gave us complete peace of mind.</p>
+          <div class="author">James & Sarah M.</div>
+          <div class="loc" data-en="Abu Dhabi" data-zh="阿布扎比">Abu Dhabi</div>
+        </div>
+        <div class="testimonial">
+          <p class="quote" data-en="The records pack and ongoing advice have been invaluable. We could not recommend them more highly." data-zh="档案包和持续的指导非常宝贵，我们强烈推荐。">The records pack and ongoing advice have been invaluable. We could not recommend them more highly.</p>
+          <div class="author">Fatima K.</div>
+          <div class="loc" data-en="Sharjah" data-zh="沙迦">Sharjah</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="faq">
+    <div class="container">
+      <div class="eyebrow" data-en="Questions" data-zh="常见问题">Questions</div>
+      <h2 class="section-title" data-en="Frequently asked" data-zh="常见问题解答">Frequently asked</h2>
+      <div class="faq-list">
+        {faqs.map((f) => (
+          <details class="faq-item">
+            <summary data-en={f.data.question_en} data-zh={f.data.question_zh}>{f.data.question_en}</summary>
+            <div class="answer" data-en={f.data.answer_en} data-zh={f.data.answer_zh}>{f.data.answer_en}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="cta-band">
+        <h2 data-en="Welcome a cherished companion into your home" data-zh="欢迎珍爱伙伴回家">Welcome a cherished companion into your home</h2>
+        <p data-en="Whether you have a breed in mind or would simply like to learn more, we'd be delighted to hear from you." data-zh="无论您心仪哪个品种，或只是想了解更多，我们都乐于为您解答。">Whether you have a breed in mind or would simply like to learn more, we'd be delighted to hear from you.</p>
+        <a href={`https://wa.me/${whatsapp}?text=Hello%2C%20I%27d%20like%20to%20learn%20more%20about%20your%20kittens`} class="btn btn-wa" target="_blank" rel="noopener" data-en="Chat on WhatsApp" data-zh="WhatsApp 在线咨询">Chat on WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</Layout>

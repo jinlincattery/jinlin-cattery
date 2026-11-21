@@ -1,0 +1,373 @@
+/* ==========================================================================
+   JinLin — 阿联酋高端猫舍独立站 设计系统
+   调性：欧美高端极简 + 猫片主导 + 暖白底色 + 衬线标题
+   参考：Atole Sacred Tales（高级感）+ Precious Home（转化效率）
+   ========================================================================== */
+
+:root {
+  /* 颜色 */
+  --color-bg: #FAF8F5;           /* 暖白主背景 */
+  --color-surface: #FFFFFF;      /* 卡片/区块表面 */
+  --color-ink: #2C2C2A;          /* 主文字（近黑） */
+  --color-ink-soft: #5F5E5A;     /* 次级文字 */
+  --color-muted: #888780;        /* 弱化文字 */
+  --color-line: #E7E0D8;         /* 分隔线/描边 */
+  --color-accent: #C9A96A;       /* 香槟金点缀 */
+  --color-accent-deep: #A8873E;  /* 深金（hover） */
+  --color-wa: #25D366;           /* WhatsApp 绿 */
+  --color-available: #3B6D11;    /* 在售状态绿 */
+  --color-available-bg: #EAF3DE;
+  --color-reserved: #854F0B;     /* 预留状态琥珀 */
+  --color-reserved-bg: #FAEEDA;
+
+  /* 字体 */
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* 圆角 */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* 间距节奏 */
+  --space-section: 96px;
+  --space-inner: 24px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-ink);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+a { color: inherit; text-decoration: none; }
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* 标题层级 */
+h1, h2, h3 { font-family: var(--font-serif); font-weight: 400; line-height: 1.2; color: var(--color-ink); }
+h1 { font-size: 40px; }
+h2 { font-size: 32px; }
+h3 { font-size: 22px; }
+
+.section-title {
+  font-size: 30px;
+  margin-bottom: 12px;
+}
+.section-sub {
+  font-size: 15px;
+  color: var(--color-ink-soft);
+  max-width: 640px;
+  margin-bottom: 40px;
+}
+
+/* 小标签（英文大写，弱化） */
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  margin-bottom: 12px;
+}
+
+/* 按钮 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--color-ink);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--color-accent-deep); }
+.btn-outline {
+  background: transparent;
+  color: var(--color-ink);
+  border: 1px solid #C4B8A8;
+}
+.btn-outline:hover { border-color: var(--color-ink); }
+.btn-wa {
+  background: var(--color-wa);
+  color: #fff;
+}
+.btn-wa:hover { background: #1EBE59; }
+
+/* 徽章 */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.badge-available { background: var(--color-available-bg); color: var(--color-available); }
+.badge-reserved { background: var(--color-reserved-bg); color: var(--color-reserved); }
+.badge-accent { background: #F5EFE2; color: var(--color-accent-deep); }
+
+/* ===== 导航 ===== */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-line);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+.nav-logo { display: flex; flex-direction: column; line-height: 1.1; }
+.nav-logo .name { font-family: var(--font-serif); font-size: 20px; color: var(--color-ink); }
+.nav-logo .tag { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--color-muted); }
+.nav-links { display: flex; align-items: center; gap: 28px; }
+.nav-links a { font-size: 14px; color: var(--color-ink-soft); }
+.nav-links a:hover { color: var(--color-ink); }
+.nav-cta { display: flex; align-items: center; gap: 12px; }
+.nav .btn { padding: 9px 18px; font-size: 14px; }
+
+/* ===== 血统背书开关模块 =====
+   默认（无证书）：血统内容隐藏，主打「健康 + 家庭养育 + 全程包办」。
+   拿到 TICA/WCF 证书后：在 <body> 加 class="show-pedigree" 即显示血统内容。
+   实现：所有血统区块标记 .pedigree-only，默认 display:none；
+   body.show-pedigree 时恢复显示。 */
+.pedigree-only { display: none; }
+body.show-pedigree .pedigree-only { display: block; }
+body.show-pedigree .pedigree-only-inline { display: inline; }
+body.show-pedigree .pedigree-only-flex { display: flex; }
+
+/* 移动端菜单按钮 */
+.nav-toggle { display: none; background: none; border: none; cursor: pointer; }
+
+/* ===== 语言切换按钮 ===== */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.lang-switch button {
+  background: transparent;
+  border: none;
+  padding: 5px 14px;
+  font-size: 13px;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.lang-switch button.active {
+  background: var(--color-ink);
+  color: #fff;
+}
+.nav-lang { margin-right: 12px; }
+
+/* ===== 英雄区 ===== */
+.hero {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  min-height: 560px;
+}
+.hero-media {
+  background: var(--color-line);
+  position: relative;
+  overflow: hidden;
+  min-height: 420px;
+}
+.hero-media img { width: 100%; height: 100%; object-fit: cover; }
+.hero-media .placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--color-muted); font-size: 14px;
+  background: linear-gradient(135deg, #E7E0D8, #D8CFC2);
+}
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 64px 56px;
+  background: var(--color-surface);
+}
+.hero-copy h1 { font-size: 44px; margin-bottom: 16px; }
+.hero-copy p.lead { font-size: 16px; color: var(--color-ink-soft); margin-bottom: 32px; }
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; }
+
+/* ===== 信任标签 ===== */
+.trust-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.trust-item {
+  background: var(--color-bg);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+}
+.trust-item .label { font-size: 14px; font-weight: 500; color: var(--color-ink); }
+.trust-item .desc { font-size: 12px; color: var(--color-muted); }
+
+/* ===== 通用 section ===== */
+.section { padding: var(--space-section) 0; }
+.section-alt { background: var(--color-surface); }
+
+/* ===== 品种卡片 ===== */
+.breed-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+.breed-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.breed-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+.breed-card .media { height: 220px; background: var(--color-line); overflow: hidden; }
+.breed-card .media img { width: 100%; height: 100%; object-fit: cover; }
+.breed-card .media .placeholder { height: 100%; display: flex; align-items: center; justify-content: center; color: var(--color-muted); }
+.breed-card .body { padding: 20px; }
+.breed-card h3 { font-size: 20px; margin-bottom: 6px; }
+.breed-card .desc { font-size: 13px; color: var(--color-ink-soft); margin-bottom: 14px; }
+.breed-card .link { font-size: 13px; color: var(--color-accent-deep); font-weight: 500; }
+
+/* ===== 在售猫卡片 ===== */
+.kitten-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+.kitten-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.kitten-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+.kitten-card .media { height: 260px; background: var(--color-line); position: relative; overflow: hidden; }
+.kitten-card .media img { width: 100%; height: 100%; object-fit: cover; }
+.kitten-card .media .placeholder { height: 100%; display: flex; align-items: center; justify-content: center; color: var(--color-muted); }
+.kitten-card .media .badge { position: absolute; top: 12px; left: 12px; }
+.kitten-card .body { padding: 18px 20px 20px; }
+.kitten-card .name { font-family: var(--font-serif); font-size: 20px; margin-bottom: 2px; }
+.kitten-card .breed { font-size: 13px; color: var(--color-muted); margin-bottom: 12px; }
+.kitten-card .meta { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 12px; color: var(--color-ink-soft); margin-bottom: 16px; }
+.kitten-card .meta span b { color: var(--color-ink); font-weight: 500; }
+
+/* ===== 信任背书（图标卡片） ===== */
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+.feature-card { padding: 24px; }
+.feature-card .icon { width: 40px; height: 40px; border-radius: 50%; background: var(--color-bg); border: 1px solid var(--color-line); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; font-size: 18px; }
+.feature-card h3 { font-size: 17px; margin-bottom: 8px; }
+.feature-card p { font-size: 13px; color: var(--color-ink-soft); }
+
+/* ===== 流程步骤 ===== */
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+.step .num { font-family: var(--font-serif); font-size: 28px; color: var(--color-accent); margin-bottom: 8px; }
+.step h3 { font-size: 17px; margin-bottom: 6px; }
+.step p { font-size: 13px; color: var(--color-ink-soft); }
+
+/* ===== 评价 ===== */
+.testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+.testimonial {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+}
+.testimonial .quote { font-size: 15px; font-style: italic; color: var(--color-ink); margin-bottom: 16px; }
+.testimonial .author { font-size: 13px; font-weight: 500; }
+.testimonial .loc { font-size: 12px; color: var(--color-muted); }
+
+/* ===== FAQ ===== */
+.faq-list { max-width: 760px; }
+.faq-item { border-bottom: 1px solid var(--color-line); }
+.faq-item summary {
+  cursor: pointer;
+  padding: 20px 0;
+  font-size: 16px;
+  font-weight: 500;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: "+"; font-size: 22px; color: var(--color-accent-deep); }
+.faq-item[open] summary::after { content: "−"; }
+.faq-item .answer { padding: 0 0 20px; font-size: 14px; color: var(--color-ink-soft); }
+
+/* ===== CTA 区 ===== */
+.cta-band {
+  background: var(--color-ink);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: 56px;
+  text-align: center;
+}
+.cta-band h2 { color: #fff; margin-bottom: 12px; }
+.cta-band p { color: #B4B2A9; margin-bottom: 28px; }
+
+/* ===== 页脚 ===== */
+.footer { background: var(--color-surface); border-top: 1px solid var(--color-line); padding: 48px 0 32px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 40px; }
+.footer h4 { font-size: 14px; margin-bottom: 14px; }
+.footer a, .footer p { font-size: 13px; color: var(--color-ink-soft); display: block; margin-bottom: 8px; }
+.footer a:hover { color: var(--color-ink); }
+.footer-bottom { border-top: 1px solid var(--color-line); padding-top: 24px; display: flex; justify-content: space-between; font-size: 12px; color: var(--color-muted); }
+
+/* ===== 浮动 WhatsApp ===== */
+.wa-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 200;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-wa);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+}
+.wa-float svg { width: 28px; height: 28px; }
+
+/* ===== 响应式 ===== */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-copy { padding: 48px 24px; }
+  .hero-copy h1 { font-size: 34px; }
+  .steps { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .kitten-detail-grid { grid-template-columns: 1fr !important; }
+}
+
+@media (max-width: 640px) {
+  h1 { font-size: 32px; }
+  h2, .section-title { font-size: 26px; }
+  .nav-links, .nav-cta .btn-outline { display: none; }
+  .nav-toggle { display: block; }
+  .trust-strip { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .cta-band { padding: 40px 24px; }
+  .section { padding: 64px 0; }
+}

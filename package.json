@@ -1,0 +1,14 @@
+{
+  "name": "jinlin-cattery",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "JinLin Cattery — 阿联酋高端猫舍独立站（Astro + Decap CMS）",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^4.16.0"
+  }
+}

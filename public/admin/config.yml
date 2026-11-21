@@ -1,0 +1,105 @@
+# ============================================================
+# JinLin 猫舍 · Decap CMS 后台配置
+# 作用：定义后台能管理哪些内容（在售猫 / 品种 / 全站文案）
+# 注意：backend 里的 repo 需要替换成你自己的 GitHub 仓库地址
+# ============================================================
+
+backend:
+  name: git-gateway
+  branch: main
+
+# 后台里显示的名字
+local_backend: true
+media_folder: "images"          # 上传的图片存到 images/
+public_folder: "images"          # 前台引用图片的路径
+
+# 内容在后台侧边栏的分组
+collections:
+  # ---------- 1. 在售猫 ----------
+  - name: "kittens"
+    label: "在售猫咪"
+    label_singular: "一只猫"
+    folder: "content/kittens"
+    create: true
+    slug: "{{slug}}"
+    format: "yaml-frontmatter"
+    editor:
+      preview: false
+    fields:
+      - { label: "名字", name: "name", widget: "string" }
+      - { label: "品种", name: "breed", widget: "string", hint: "例如：英国短毛猫 / 缅因猫" }
+      - { label: "英文品种", name: "breed_en", widget: "string", hint: "例如：British Shorthair / Maine Coon" }
+      - { label: "颜色", name: "colour", widget: "string", hint: "例如：金渐层 / 蓝银虎斑" }
+      - { label: "英文颜色", name: "colour_en", widget: "string", hint: "例如：Golden / Blue Silver Tabby" }
+      - { label: "性别", name: "gender", widget: "select", options: ["公 (Male)", "母 (Female)"] }
+      - { label: "年龄（周）", name: "age", widget: "number", hint: "例如 14，表示 14 周" }
+      - label: "状态"
+        name: "status"
+        widget: "select"
+        options:
+          - { label: "在售", value: "available" }
+          - { label: "已预订", value: "reserved" }
+          - { label: "排队中", value: "waitlist" }
+      - { label: "猫咪照片", name: "photo", widget: "image", hint: "上传这只猫的照片" }
+      - { label: "猫咪视频（可选）", name: "video", widget: "file", required: false, hint: "上传这只猫的视频（mp4）" }
+      - { label: "简介（中文）", name: "description_zh", widget: "text", hint: "这只猫的性格、特点介绍" }
+      - { label: "简介（英文）", name: "description_en", widget: "text" }
+      - { label: "排序", name: "order", widget: "number", default: 0, hint: "数字越小越靠前" }
+
+  # ---------- 2. 品种介绍 ----------
+  - name: "breeds"
+    label: "品种介绍"
+    label_singular: "一个品种"
+    folder: "content/breeds"
+    create: true
+    slug: "{{slug}}"
+    format: "yaml-frontmatter"
+    editor:
+      preview: false
+    fields:
+      - { label: "品种名（中文）", name: "name_zh", widget: "string" }
+      - { label: "品种名（英文）", name: "name_en", widget: "string" }
+      - { label: "一句话描述（中文）", name: "tagline_zh", widget: "string" }
+      - { label: "一句话描述（英文）", name: "tagline_en", widget: "string" }
+      - { label: "详细介绍（中文）", name: "body_zh", widget: "text" }
+      - { label: "详细介绍（英文）", name: "body_en", widget: "text" }
+      - { label: "品种图片", name: "photo", widget: "image" }
+      - { label: "排序", name: "order", widget: "number", default: 0 }
+
+  # ---------- 3. 全站文案 ----------
+  - name: "site"
+    label: "全站文案"
+    files:
+      - name: "settings"
+        label: "站点设置"
+        file: "content/site/settings.md"
+        format: "yaml-frontmatter"
+        fields:
+          - { label: "品牌名", name: "brand", widget: "string" }
+          - { label: "副标题（中文）", name: "tagline_zh", widget: "string" }
+          - { label: "副标题（英文）", name: "tagline_en", widget: "string" }
+          - { label: "首页大标题（中文）", name: "hero_title_zh", widget: "string" }
+          - { label: "首页大标题（英文）", name: "hero_title_en", widget: "string" }
+          - { label: "首页副文案（中文）", name: "hero_sub_zh", widget: "text" }
+          - { label: "首页副文案（英文）", name: "hero_sub_en", widget: "text" }
+          - { label: "WhatsApp 号码", name: "whatsapp", widget: "string", hint: "格式：971501234567（不带 + 号）" }
+          - { label: "联系邮箱", name: "email", widget: "string" }
+          - { label: "Instagram 链接", name: "instagram", widget: "string", required: false }
+          - { label: "TikTok 链接", name: "tiktok", widget: "string", required: false }
+
+  # ---------- 4. FAQ 常见问题 ----------
+  - name: "faq"
+    label: "常见问题 FAQ"
+    label_singular: "一条问答"
+    folder: "content/faq"
+    create: true
+    slug: "{{slug}}"
+    format: "yaml-frontmatter"
+    editor:
+      preview: false
+    fields:
+      - { label: "问题（中文）", name: "question_zh", widget: "string" }
+      - { label: "问题（英文）", name: "question_en", widget: "string" }
+      - { label: "回答（中文）", name: "answer_zh", widget: "text" }
+      - { label: "回答（英文）", name: "answer_en", widget: "text" }
+      - { label: "排序", name: "order", widget: "number", default: 0 }

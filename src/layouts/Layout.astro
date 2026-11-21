@@ -1,0 +1,143 @@
+---
+// 全局布局组件：导航 + 页脚 + SEO + 双语切换脚本
+import '../style.css';
+import { getCollection, getEntry } from 'astro:content';
+
+interface Props {
+  title: string;
+  description?: string;
+  lang?: string;
+  image?: string;
+}
+
+const { title, description = '', image = '/images/hero-cat.jpg' } = Astro.props;
+
+// 当前页面完整 URL（用于 canonical / Open Graph）
+const siteUrl = 'https://jinlincattery.com';
+const currentPath = Astro.url.pathname;
+const canonicalUrl = new URL(currentPath, siteUrl).href;
+
+// 读取站点设置
+let settings = null;
+try {
+  const s = await getEntry('site', 'settings');
+  settings = s.data;
+} catch (e) {
+  settings = { brand: 'JinLin', tagline_zh: '', tagline_en: '', whatsapp: '971501234567' };
+}
+const whatsapp = settings.whatsapp || '971501234567';
+const waLink = `https://wa.me/${whatsapp}?text=Hello%2C%20I%27m%20interested%20in%20your%20kittens`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  {description && <meta name="description" content={description} />}
+  <meta name="generator" content={Astro.generator} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- 规范 URL：避免重复内容，帮助搜索引擎与 AI 识别唯一页面 -->
+  <link rel="canonical" href={canonicalUrl} />
+
+  <!-- Open Graph：分享到 WhatsApp / 社交平台时的标题、摘要、缩略图 -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={settings.brand} />
+  <meta property="og:title" content={title} />
+  {description && <meta property="og:description" content={description} />}
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:image" content={new URL(image, siteUrl).href} />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card：在 X / Twitter 分享时的展示 -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  {description && <meta name="twitter:description" content={description} />}
+  <meta name="twitter:image" content={new URL(image, siteUrl).href} />
+
+  <!-- 结构化数据（JSON-LD）：帮助 Google / AI 理解网站性质 -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": settings.brand,
+    "url": siteUrl,
+    "logo": new URL('/favicon.svg', siteUrl).href,
+    "description": description || "British Shorthair & Maine Coon kittens delivered to Dubai, Abu Dhabi and across the UAE.",
+    "areaServed": "United Arab Emirates",
+    "sameAs": [
+      settings.instagram,
+      settings.tiktok,
+    ].filter(Boolean),
+  })} />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo">
+        <span class="name">{settings.brand}</span>
+        <span class="tag" data-en="British Shorthair · Maine Coon" data-zh="英短 · 缅因猫">British Shorthair · Maine Coon</span>
+      </a>
+      <nav class="nav-links">
+        <a href="/#breeds" data-en="Breeds" data-zh="品种介绍">Breeds</a>
+        <a href="/available-cats" data-en="Available cats" data-zh="在售猫咪">Available cats</a>
+        <a href="/how-it-works" data-en="How it works" data-zh="购买流程">How it works</a>
+        <a href="/about" data-en="About" data-zh="关于我们">About</a>
+        <a href="/faq" data-en="FAQ" data-zh="常见问题">FAQ</a>
+      </nav>
+      <div class="nav-cta">
+        <div class="lang-switch nav-lang">
+          <button type="button" data-lang-switch="en" data-lang-toggle="en" class="active">EN</button>
+          <button type="button" data-lang-switch="zh" data-lang-toggle="zh">中文</button>
+        </div>
+        <a href={waLink} class="btn btn-wa" target="_blank" rel="noopener" data-en="WhatsApp" data-zh="WhatsApp 咨询">WhatsApp</a>
+      </div>
+    </div>
+  </header>
+
+  <slot />
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="nav-logo" style="margin-bottom:16px;">
+            <span class="name" style="font-family:var(--font-serif);font-size:20px;">{settings.brand}</span>
+            <span class="tag" style="font-size:9px;letter-spacing:1.5px;color:var(--color-muted);" data-en="BRITISH SHORTHAIR · MAINE COON" data-zh="英短 · 缅因猫">BRITISH SHORTHAIR · MAINE COON</span>
+          </div>
+          <p data-en="British Shorthair & Maine Coon kittens delivered to Dubai, Abu Dhabi and across the UAE." data-zh="纯种猫直送迪拜、阿布扎比及阿联酋全境。">British Shorthair & Maine Coon kittens delivered to Dubai, Abu Dhabi and across the UAE.</p>
+        </div>
+        <div>
+          <h4 data-en="Explore" data-zh="浏览">Explore</h4>
+          <a href="/#breeds" data-en="Breeds" data-zh="品种介绍">Breeds</a>
+          <a href="/available-cats" data-en="Available cats" data-zh="在售猫咪">Available cats</a>
+          <a href="/how-it-works" data-en="How it works" data-zh="购买流程">How it works</a>
+        </div>
+        <div>
+          <h4 data-en="Company" data-zh="关于">Company</h4>
+          <a href="/about" data-en="About us" data-zh="关于我们">About us</a>
+          <a href="/faq" data-en="FAQ" data-zh="常见问题">FAQ</a>
+          <a href="/blog" data-en="Journal" data-zh="博客">Journal</a>
+        </div>
+        <div>
+          <h4 data-en="Contact" data-zh="联系我们">Contact</h4>
+          <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noopener">WhatsApp</a>
+          <a href="/contact" data-en="Contact" data-zh="联系我们">Contact</a>
+          {settings.instagram && <a href={settings.instagram} rel="noopener">Instagram</a>}
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 {settings.brand} Cattery · Dubai, UAE</span>
+        <span>EN / 中文</span>
+      </div>
+    </div>
+  </footer>
+
+  <a href={waLink} class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <svg viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <script is:inline src="/js/lang.js"></script>
+</body>
+</html>

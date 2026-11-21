@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
+
+const settingsEntry = await getEntry('site', 'settings');
+const settings = settingsEntry.data;
+const whatsapp = settings.whatsapp || '971501234567';
+const email = settings.email || 'hello@example.com';
+---
+
+<Layout title="Contact | JinLin Cattery UAE" description="Contact JinLin Cattery for British Shorthair and Maine Coon kittens delivered to the UAE. WhatsApp, email and social media.">
+  <section class="section" style="padding-top:64px;">
+    <div class="container">
+      <div class="eyebrow" data-en="Contact us" data-zh="联系我们">Contact us</div>
+      <h1 style="font-size:44px;margin-bottom:16px;" data-en="Let's find your companion" data-zh="一起找到您的伙伴">Let's find your companion</h1>
+      <p class="section-sub" style="max-width:720px;" data-en="Reach us by WhatsApp for the fastest response, or by email. We'll help you find the right kitten and guide you through the process." data-zh="通过 WhatsApp 获得最快回复，或通过邮件联系我们。我们将帮您找到合适的猫咪并引导您完成流程。">Reach us by WhatsApp for the fastest response, or by email. We'll help you find the right kitten and guide you through the process.</p>
+
+      <div class="feature-grid" style="margin-bottom:48px;">
+        <div class="feature-card">
+          <div class="icon">✉</div>
+          <h3 data-en="WhatsApp" data-zh="WhatsApp">WhatsApp</h3>
+          <p data-en="The fastest way to reach us — for enquiries, reservations and viewings." data-zh="联系我们的最快方式——咨询、预订与看猫。">The fastest way to reach us — for enquiries, reservations and viewings.</p>
+          <a href={`https://wa.me/${whatsapp}?text=Hello%2C%20I%27d%20like%20to%20enquire%20about%20your%20kittens`} class="btn btn-wa" style="margin-top:16px;" target="_blank" rel="noopener" data-en="Chat now" data-zh="立即咨询">Chat now</a>
+        </div>
+        <div class="feature-card">
+          <div class="icon">@</div>
+          <h3 data-en="Email" data-zh="邮箱">Email</h3>
+          <p data-en="Prefer email? Write to us and we'll get back to you." data-zh="更习惯邮件？写信给我们，我们会回复。">Prefer email? Write to us and we'll get back to you.</p>
+          <p style="margin-top:16px;font-size:14px;color:var(--color-ink);"><a href={`mailto:${email}`}>{email}</a></p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">✦</div>
+          <h3 data-en="Social media" data-zh="社交媒体">Social media</h3>
+          <p data-en="Follow us for new litters, behind-the-scenes and kitten updates." data-zh="关注我们，获取新窝次、幕后故事与猫咪动态。">Follow us for new litters, behind-the-scenes and kitten updates.</p>
+          <p style="margin-top:16px;font-size:14px;">
+            {settings.instagram && <a href={settings.instagram} style="color:var(--color-accent-deep);">Instagram</a>}
+            {settings.instagram && settings.tiktok && ' · '}
+            {settings.tiktok && <a href={settings.tiktok} style="color:var(--color-accent-deep);">TikTok</a>}
+          </p>
+        </div>
+      </div>
+
+      <div class="cta-band">
+        <h2 data-en="Start a conversation" data-zh="开始对话">Start a conversation</h2>
+        <p data-en="Tell us the breed and colour you have in mind — we'll help you find the right kitten." data-zh="告诉我们您心仪的品种与颜色，我们将帮您找到合适的猫咪。">Tell us the breed and colour you have in mind — we'll help you find the right kitten.</p>
+        <a href={`https://wa.me/${whatsapp}?text=Hello%2C%20I%27m%20interested%20in%20a%20British%20Shorthair%20or%20Maine%20Coon%20kitten`} class="btn btn-wa" target="_blank" rel="noopener" data-en="Message on WhatsApp" data-zh="WhatsApp 发送消息">Message on WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</Layout>

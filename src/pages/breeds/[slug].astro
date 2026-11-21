@@ -1,0 +1,42 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const breeds = await getCollection('breeds');
+  return breeds.map((b) => ({
+    params: { slug: b.slug },
+    props: { breed: b },
+  }));
+}
+
+const { breed } = Astro.props;
+const b = breed.data;
+const settingsEntry = await getEntry('site', 'settings');
+const settings = settingsEntry.data;
+const whatsapp = settings.whatsapp || '971501234567';
+---
+
+<Layout title={`${b.name_en} | ${settings.brand} Cattery UAE`} description={b.tagline_en}>
+  <section class="section">
+    <div class="container">
+      <div class="eyebrow" data-en="Our breeds" data-zh="我们的品种">Our breeds</div>
+      <h1 style="font-size:40px;margin-bottom:16px;" data-en={b.name_en} data-zh={b.name_zh}>{b.name_en}</h1>
+      <p style="font-size:16px;color:var(--color-ink-soft);margin-bottom:32px;" data-en={b.tagline_en} data-zh={b.tagline_zh}>{b.tagline_en}</p>
+
+      <div class="hero-media" style="min-height:400px;border-radius:var(--radius-lg);margin-bottom:32px;">
+        <img src={b.photo} alt={b.name_en} width="1920" height="2560">
+      </div>
+
+      <div style="font-size:15px;color:var(--color-ink-soft);max-width:720px;margin-bottom:48px;line-height:1.8;" data-en={b.body_en} data-zh={b.body_zh}>
+        {b.body_en}
+      </div>
+
+      <div class="cta-band">
+        <h2 data-en={`Looking for a ${b.name_en} kitten?`} data-zh={`想找一只${b.name_zh}吗？`}>Looking for a {b.name_en} kitten?</h2>
+        <p data-en="Tell us the colour and timing you have in mind — we'll match you with the right kitten." data-zh="告诉我们您想要的颜色和时间，我们为您匹配合适的小猫。">Tell us the colour and timing you have in mind — we'll match you with the right kitten.</p>
+        <a href={`https://wa.me/${whatsapp}?text=Hello%2C%20I%27m%20looking%20for%20a%20${b.name_en.replace(/ /g, '%20')}%20kitten`} class="btn btn-wa" target="_blank" rel="noopener" data-en="Enquire on WhatsApp" data-zh="WhatsApp 咨询">Enquire on WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</Layout>

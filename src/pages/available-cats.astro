@@ -1,0 +1,44 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const kittens = (await getCollection('kittens')).sort((a, b) => a.data.order - b.data.order);
+
+const statusMap = {
+  available: { cls: 'badge-available', zh: '在售', en: 'Available' },
+  reserved: { cls: 'badge-reserved', zh: '已预订', en: 'Reserved' },
+  waitlist: { cls: 'badge-accent', zh: '排队中', en: 'Waitlist' },
+};
+---
+
+<Layout title="Available Kittens | JinLin Cattery UAE" description="Browse available British Shorthair and Maine Coon kittens. Vet-checked, vaccinated and delivered across the UAE. Reserve on WhatsApp.">
+  <section class="section">
+    <div class="container">
+      <div class="eyebrow" data-en="Available now" data-zh="在售猫咪">Available now</div>
+      <h1 class="section-title" data-en="Kittens available for reservation" data-zh="可供预订的猫咪">Kittens available for reservation</h1>
+      <p class="section-sub" data-en="Each kitten is raised underfoot and well-socialised. Prices shared privately on enquiry — every kitten is placed by reservation." data-zh="每只猫咪都居家养育、充分社会化。价格私信咨询，所有猫咪均以预订方式成交。">Each kitten is raised underfoot and well-socialised. Prices shared privately on enquiry — every kitten is placed by reservation.</p>
+
+      <div class="kitten-grid">
+        {kittens.map((k) => {
+          const st = statusMap[k.data.status] || statusMap.available;
+          return (
+            <a href={`/kittens/${k.slug}`} class="kitten-card">
+              <div class="media">
+                <span class={`badge ${st.cls}`} data-en={st.en} data-zh={st.zh}>{st.en}</span>
+                <img src={k.data.photo} alt={`${k.data.name} — ${k.data.breed_en} kitten`} loading="lazy" width="1920" height="2560">
+              </div>
+              <div class="body">
+                <div class="name">{k.data.name}</div>
+                <div class="breed" data-en={`${k.data.breed_en} · ${k.data.colour_en}`} data-zh={`${k.data.breed} · ${k.data.colour}`}>{k.data.breed_en} · {k.data.colour_en}</div>
+                <div class="meta">
+                  <span><b data-en="Gender" data-zh="性别">Gender</b> <span>{k.data.gender}</span></span>
+                  <span><b data-en="Age" data-zh="年龄">Age</b> <span>{k.data.age} weeks</span></span>
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+</Layout>

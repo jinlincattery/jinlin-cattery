@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const kittens = await getCollection('kittens');
+  return kittens.map((k) => ({
+    params: { slug: k.slug },
+    props: { kitten: k },
+  }));
+}
+
+const { kitten } = Astro.props;
+const k = kitten.data;
+const settingsEntry = await getEntry('site', 'settings');
+const settings = settingsEntry.data;
+const whatsapp = settings.whatsapp || '971501234567';
+
+const statusMap = {
+  available: { cls: 'badge-available', zh: '在售', en: 'Available' },
+  reserved: { cls: 'badge-reserved', zh: '已预订', en: 'Reserved' },
+  waitlist: { cls: 'badge-accent', zh: '排队中', en: 'Waitlist' },
+};
+const st = statusMap[k.status] || statusMap.available;
+const waText = `Hello%2C%20I%27m%20interested%20in%20${k.name}%20the%20${k.colour_en.replace(/ /g, '%20')}%20${k.breed_en.replace(/ /g, '%20')}`;
+---
+
+<Layout title={`${k.name} — ${k.colour_en} ${k.breed_en} Kitten | ${settings.brand} Cattery UAE`} description={k.description_en}>
+  <section style="padding: 56px 0;">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;" class="kitten-detail-grid">
+        <div class="hero-media" style="min-height:480px;border-radius:var(--radius-lg);">
+          <img src={k.photo} alt={`${k.name} — ${k.colour_en} ${k.breed_en} kitten`} width="1920" height="2560">
+        </div>
+
+        <div>
+          <span class={`badge ${st.cls}`} style="margin-bottom:16px;" data-en={st.en} data-zh={st.zh}>{st.en}</span>
+          <h1 style="font-size:40px;margin-bottom:4px;">{k.name}</h1>
+          <p style="font-size:16px;color:var(--color-muted);margin-bottom:24px;" data-en={`${k.breed_en} · ${k.colour_en}`} data-zh={`${k.breed} · ${k.colour}`}>{k.breed_en} · {k.colour_en}</p>
+
+          <div class="trust-strip" style="grid-template-columns:repeat(3,1fr);margin-bottom:28px;">
+            <div class="trust-item"><div class="label" data-en="Gender" data-zh="性别">Gender</div><div class="desc">{k.gender}</div></div>
+            <div class="trust-item"><div class="label" data-en="Age" data-zh="年龄">Age</div><div class="desc">{k.age} weeks</div></div>
+            <div class="trust-item"><div class="label" data-en="Colour" data-zh="颜色">Colour</div><div class="desc" data-en={k.colour_en} data-zh={k.colour}>{k.colour_en}</div></div>
+          </div>
+
+          <p style="font-size:15px;color:var(--color-ink-soft);margin-bottom:28px;" data-en={k.description_en} data-zh={k.description_zh}>
+            {k.description_en}
+          </p>
+
+          <div class="feature-grid" style="grid-template-columns:1fr 1fr;gap:14px;margin-bottom:32px;">
+            <div class="feature-card" style="padding:16px;">
+              <div class="icon">✎</div>
+              <h3 style="font-size:15px;" data-en="Health records" data-zh="健康档案">Health records</h3>
+              <p style="font-size:12px;" data-en="Complete health records provided on reservation." data-zh="预订即提供完整健康档案。">Complete health records provided on reservation.</p>
+            </div>
+            <div class="feature-card" style="padding:16px;">
+              <div class="icon">✓</div>
+              <h3 style="font-size:15px;" data-en="Health" data-zh="健康">Health</h3>
+              <p style="font-size:12px;" data-en="Vet-checked, vaccinated, microchipped." data-zh="已兽医检查、接种疫苗、植入芯片。">Vet-checked, vaccinated, microchipped.</p>
+            </div>
+            <div class="feature-card" style="padding:16px;">
+              <div class="icon">✈</div>
+              <h3 style="font-size:15px;" data-en="Delivery" data-zh="配送">Delivery</h3>
+              <p style="font-size:12px;" data-en="Door-to-door delivery across the UAE." data-zh="阿联酋全境门到门配送。">Door-to-door delivery across the UAE.</p>
+            </div>
+            <div class="feature-card" style="padding:16px;">
+              <div class="icon">∞</div>
+              <h3 style="font-size:15px;" data-en="Support" data-zh="支持">Support</h3>
+              <p style="font-size:12px;" data-en="Lifetime guidance after adoption." data-zh="领养后终身指导。">Lifetime guidance after adoption.</p>
+            </div>
+            <div class="feature-card pedigree-only" style="padding:16px;">
+              <div class="icon">§</div>
+              <h3 style="font-size:15px;" data-en="Pedigree" data-zh="血统">Pedigree</h3>
+              <p style="font-size:12px;" data-en="Registered pedigree, full documentation provided." data-zh="注册血统，提供完整血统文件。">Registered pedigree, full documentation provided.</p>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <a href={`https://wa.me/${whatsapp}?text=${waText}`} class="btn btn-wa" style="width:100%;" target="_blank" rel="noopener" data-en={`Enquire about ${k.name} on WhatsApp`} data-zh={`WhatsApp 咨询 ${k.name}`}>Enquire about {k.name} on WhatsApp</a>
+            <p style="font-size:12px;color:var(--color-muted);text-align:center;" data-en="Prices shared privately on enquiry · Reservation secures your kitten" data-zh="价格私信咨询 · 预订即可锁定猫咪">Prices shared privately on enquiry · Reservation secures your kitten</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

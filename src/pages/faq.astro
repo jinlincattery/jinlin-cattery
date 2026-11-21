@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout title="FAQ — Buying Kittens in the UAE | JinLin Cattery" description="Answers to common questions about buying British Shorthair and Maine Coon kittens in the UAE — health, delivery, import, reservation, prices and aftercare.">
+  <section class="section">
+    <div class="container">
+      <div class="eyebrow" data-en="Questions" data-zh="常见问题">Questions</div>
+      <h1 class="section-title" data-en="Frequently asked questions" data-zh="常见问题解答">Frequently asked questions</h1>
+      <p class="section-sub" data-en="Everything you might want to know about buying a kitten from JinLin — health, delivery, reservation, pricing and aftercare." data-zh="关于从 JinLin 购买猫咪，您可能想知道的一切——健康、配送、预订、价格与售后。">Everything you might want to know about buying a kitten from JinLin — health, delivery, reservation, pricing and aftercare.</p>
+
+      <div class="faq-list">
+        {faqs.map((f) => (
+          <details class="faq-item">
+            <summary data-en={f.data.question_en} data-zh={f.data.question_zh}>{f.data.question_en}</summary>
+            <div class="answer" data-en={f.data.answer_en} data-zh={f.data.answer_zh}>{f.data.answer_en}</div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

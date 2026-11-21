@@ -1,0 +1,28 @@
+# JinLin Cattery — 允许所有搜索引擎与 AI 爬虫抓取（SEO/GEO 友好）
+User-agent: *
+Allow: /
+
+# AI 搜索引擎（GEO：允许 ChatGPT、Perplexity、Google AI 等抓取你的内容）
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# 站点地图位置
+Sitemap: https://jinlincattery.com/sitemap.xml
