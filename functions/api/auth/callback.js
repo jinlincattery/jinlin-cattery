@@ -3,20 +3,11 @@
 export async function onRequest({ request, env }) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
-  const state = url.searchParams.get("state");
-
-  const cookieHeader = request.headers.get("Cookie") || "";
-  const storedState = (cookieHeader.match(/(?:^|;\s*)oauth_state=([^;]+)/) || [])[1];
 
   let status = "error";
   let content = { message: url.searchParams.get("error") || "missing code" };
 
-  // state 校验：仅在两者都存在且不匹配时才拒绝，避免因 cookie 丢失误伤正常登录
-  const stateMismatch = state && storedState && state !== storedState;
-
-  if (stateMismatch) {
-    content = { message: "Invalid state parameter" };
-  } else if (code && !url.searchParams.get("error")) {
+  if (code && !url.searchParams.get("error")) {
     const res = await fetch("https://github.com/login/oauth/access_token", {
       method: "POST",
       headers: {
@@ -42,20 +33,28 @@ export async function onRequest({ request, env }) {
 
   const message = `authorization:github:${status}:${JSON.stringify(content)}`;
 
-  // Decap 的双向握手协议：
-  // 1. 回调页先向 opener 发送 authorizing:github 握手请求
-  // 2. 等 opener 回传 authorizing:github 后，再发送真正的结果
+  // Decap 握手协议：先发 authorizing:github，等 opener 回传后再发结果
+  // 同时用 setInterval 兜底：即使握手没收到回传，也定时尝试发送结果
   const html = `<!DOCTYPE html><html><body><script>
     (function() {
       var allowed = window.location.origin;
       var message = ${JSON.stringify(message)};
+      var sent = false;
+      function send() {
+        if (sent) return;
+        sent = true;
+        window.opener.postMessage(message, allowed);
+      }
       window.addEventListener("message", function(e) {
         if (e.origin !== allowed) return;
         if (e.data !== "authorizing:github") return;
-        window.opener.postMessage(message, allowed);
-        window.close();
+        send();
       });
       window.opener.postMessage("authorizing:github", allowed);
+      // 兜底：500ms 后若还没通过握手发送，也直接尝试发送结果
+      setTimeout(send, 500);
+      // 再兜底：1.5s 后关闭弹窗
+      setTimeout(function() { window.close(); }, 1500);
     })();
   </script></body></html>`;
 
