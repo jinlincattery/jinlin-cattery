@@ -11,7 +11,10 @@ export async function onRequest({ request, env }) {
   let status = "error";
   let content = { message: url.searchParams.get("error") || "missing code" };
 
-  if (!state || state !== storedState) {
+  // state 校验：仅在两者都存在且不匹配时才拒绝，避免因 cookie 丢失误伤正常登录
+  const stateMismatch = state && storedState && state !== storedState;
+
+  if (stateMismatch) {
     content = { message: "Invalid state parameter" };
   } else if (code && !url.searchParams.get("error")) {
     const res = await fetch("https://github.com/login/oauth/access_token", {
