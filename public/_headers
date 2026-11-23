@@ -1,0 +1,4 @@
+# Cloudflare Pages 自定义响应头
+# 关键：允许 OAuth 弹窗保留 window.opener 引用，否则 Decap CMS 的 GitHub 登录会"闪一下就弹回"
+/admin/*
+  Cross-Origin-Opener-Policy: unsafe-none
