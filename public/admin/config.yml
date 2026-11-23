@@ -1,15 +1,15 @@
 # ============================================================
 # JinLin 猫舍 · Decap CMS 后台配置
 # 作用：定义后台能管理哪些内容（在售猫 / 品种 / 全站文案）
-# 认证方式：GitHub OAuth（通过公共 OAuth 代理，Cloudflare Pages 可用）
+# 认证方式：GitHub OAuth（通过本站 Cloudflare Pages Functions 网关）
 # ============================================================
 
 backend:
   name: github
   repo: jinlincattery/jinlin-cattery   # GitHub 用户名/仓库名
   branch: main
-  base_url: https://decap-cms-oauth.netlify.app   # 公共 OAuth 代理
-  auth_endpoint: /auth
+  base_url: https://jinlincattery.com   # 你自己网站的 OAuth 网关
+  auth_endpoint: api/auth
 
 # 后台里显示的名字
 local_backend: false
