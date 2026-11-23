@@ -1,17 +1,20 @@
 # ============================================================
 # JinLin 猫舍 · Decap CMS 后台配置
 # 作用：定义后台能管理哪些内容（在售猫 / 品种 / 全站文案）
-# 注意：backend 里的 repo 需要替换成你自己的 GitHub 仓库地址
+# 认证方式：GitHub OAuth（通过公共 OAuth 代理，Cloudflare Pages 可用）
 # ============================================================
 
 backend:
-  name: git-gateway
+  name: github
+  repo: jinlincattery/jinlin-cattery   # GitHub 用户名/仓库名
   branch: main
+  base_url: https://decap-cms-oauth.netlify.app   # 公共 OAuth 代理
+  auth_endpoint: /auth
 
 # 后台里显示的名字
-local_backend: true
-media_folder: "images"          # 上传的图片存到 images/
-public_folder: "images"          # 前台引用图片的路径
+local_backend: false
+media_folder: "public/images"   # 上传的图片存到 public/images/
+public_folder: "/images"        # 前台引用图片的路径（相对站点根）
 
 # 内容在后台侧边栏的分组
 collections:
@@ -19,7 +22,7 @@ collections:
   - name: "kittens"
     label: "在售猫咪"
     label_singular: "一只猫"
-    folder: "content/kittens"
+    folder: "src/content/kittens"
     create: true
     slug: "{{slug}}"
     format: "yaml-frontmatter"
@@ -50,7 +53,7 @@ collections:
   - name: "breeds"
     label: "品种介绍"
     label_singular: "一个品种"
-    folder: "content/breeds"
+    folder: "src/content/breeds"
     create: true
     slug: "{{slug}}"
     format: "yaml-frontmatter"
@@ -72,7 +75,7 @@ collections:
     files:
       - name: "settings"
         label: "站点设置"
-        file: "content/site/settings.md"
+        file: "src/content/site/settings.md"
         format: "yaml-frontmatter"
         fields:
           - { label: "品牌名", name: "brand", widget: "string" }
@@ -91,7 +94,7 @@ collections:
   - name: "faq"
     label: "常见问题 FAQ"
     label_singular: "一条问答"
-    folder: "content/faq"
+    folder: "src/content/faq"
     create: true
     slug: "{{slug}}"
     format: "yaml-frontmatter"
