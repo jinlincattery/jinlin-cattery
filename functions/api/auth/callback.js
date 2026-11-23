@@ -42,15 +42,22 @@ export async function onRequest({ request, env }) {
 
   const message = `authorization:github:${status}:${JSON.stringify(content)}`;
 
-  return new Response(
-    `<!DOCTYPE html><html><body><script>
-      (function() {
-        try {
-          window.opener.postMessage(${JSON.stringify(message)}, "*");
-        } catch (e) {}
+  // Decap 的双向握手协议：
+  // 1. 回调页先向 opener 发送 authorizing:github 握手请求
+  // 2. 等 opener 回传 authorizing:github 后，再发送真正的结果
+  const html = `<!DOCTYPE html><html><body><script>
+    (function() {
+      var allowed = window.location.origin;
+      var message = ${JSON.stringify(message)};
+      window.addEventListener("message", function(e) {
+        if (e.origin !== allowed) return;
+        if (e.data !== "authorizing:github") return;
+        window.opener.postMessage(message, allowed);
         window.close();
-      })();
-    </script></body></html>`,
-    { headers: { "Content-Type": "text/html" } }
-  );
+      });
+      window.opener.postMessage("authorizing:github", allowed);
+    })();
+  </script></body></html>`;
+
+  return new Response(html, { headers: { "Content-Type": "text/html" } });
 }
