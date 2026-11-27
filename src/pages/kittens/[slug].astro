@@ -25,7 +25,7 @@ const st = statusMap[k.status] || statusMap.available;
 const waText = `Hello%2C%20I%27m%20interested%20in%20${k.name}%20the%20${k.colour_en.replace(/ /g, '%20')}%20${k.breed_en.replace(/ /g, '%20')}`;
 ---
 
-<Layout title={`${k.name} — ${k.colour_en} ${k.breed_en} Kitten | ${settings.brand} Cattery UAE`} description={k.description_en}>
+<Layout title={`${k.name} — ${k.colour_en} ${k.breed_en} Kitten | ${settings.brand} Cattery`} description={k.description_en}>
   <section style="padding: 56px 0;">
     <div class="container">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;" class="kitten-detail-grid">
@@ -62,7 +62,7 @@ const waText = `Hello%2C%20I%27m%20interested%20in%20${k.name}%20the%20${k.colou
             <div class="feature-card" style="padding:16px;">
               <div class="icon">✈</div>
               <h3 style="font-size:15px;" data-en="Delivery" data-zh="配送">Delivery</h3>
-              <p style="font-size:12px;" data-en="Door-to-door delivery across the UAE." data-zh="阿联酋全境门到门配送。">Door-to-door delivery across the UAE.</p>
+              <p style="font-size:12px;" data-en="Door-to-door delivery worldwide." data-zh="全球门到门配送。">Door-to-door delivery worldwide.</p>
             </div>
             <div class="feature-card" style="padding:16px;">
               <div class="icon">∞</div>

@@ -5,7 +5,7 @@ import { getCollection } from 'astro:content';
 const faqs = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<Layout title="FAQ — Buying Kittens in the UAE | JinLin Cattery" description="Answers to common questions about buying British Shorthair and Maine Coon kittens in the UAE — health, delivery, import, reservation, prices and aftercare.">
+<Layout title="FAQ — Buying Kittens | JinLin Cattery" description="Answers to common questions about buying British Shorthair and Maine Coon kittens — health, delivery, import, reservation, prices and aftercare.">
   <section class="section">
     <div class="container">
       <div class="eyebrow" data-en="Questions" data-zh="常见问题">Questions</div>
